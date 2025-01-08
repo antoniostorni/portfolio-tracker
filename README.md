@@ -1,99 +1,86 @@
-# AssetDash Full-stack Engineering Take-home test
+# AssetDash Full-stack Take-home
 
-Our mission at AssetDash is to help users track the assets in their portfolio from many different sources.
+This repository demonstrates a simple full-stack setup using **FastAPI** for the backend and **React** (with **Tailwind CSS**) for the frontend. It implements two primary features for managing portfolio data:
 
-In this exercise, you will be creating a few backend endpoints that power our web and mobile applications. An important module at AssetDash is the portfolio tracking tool,
-which pulls in and calculates the user's portfolio holdings across different asset types and displays this to them on the web or in the mobile app.
+1. **Portfolio Chart**  
+2. **Portfolio Holdings**
 
-Please read the instructions below and complete the task at your own pace. It should not take longer than 1 hour for
-you to complete the Backend assignment. The Frontend assignment is optional but if you have experience with frontend develop, specifically
-using React.js, feel free to complete it for bonus points :)
+---
 
-## Backend
-Task: You have been provided a basic `server.py` using FastAPI for the endpoints you need to fill in. Create 2 API endpoints to fetch the portfolio chart and list of holdings for a user by `user_id`
+## 1. Overview
 
-Notes
-- Please make sure to use proper Pydantic response models https://fastapi.tiangolo.com/tutorial/response-model/
-- Dependencies are provided in `requirements.txt`
-- You can run the server by going into `/backend` and running `python server.py`
-- You can install any other dependencies you need via `pip` but please make sure to update `requirements.txt` so that I can run the project to test.
+### Backend
 
-#### Data
-`database.py` - This is a Python file that contains data for users. In practice we would use a real database but for the purpose of this take-home test you can just read this data directly from the file to make your calculations and return in the APIs.
-- HOLDINGS - this object is a list of the user's portfolio holdings by Asset, each user can hold multiple wallets and have many assets in the wallet
-- ASSETS - this object is the list of assets containing descriptive data about the asset like `ticker`, `name`, `logo`
-- ASSET_TYPES - this is a set of the possible values for the asset type field
+- Built with **FastAPI** (`server.py`).
+- Two main endpoints:
+  1. `GET /portfolio-chart`
+     - Query param: `user_id`
+     - Returns total portfolio value and a pie chart breakdown of each asset type in the user's portfolio.
+  2. `GET /portfolio-holdings`
+     - Query params: `user_id`, optionally `asset_type`
+     - Returns a descending-value list of holdings, each with `ticker`, `name`, `type`, `value`, and `percentage`.
 
-#### Endpoints
-- Portfolio Chart Endpoint
-    - GET request
-    - Query Params
-        - `user_id`: `str`
-    - Response
-        - Return the total portfolio value ($) and the data to create a pie chart of the user's portfolio. The response should show the percentage (%) of each asset type in the user's portfolio.
-        - Example response:
-        ```
-         {
-            "total_value": 40000,
-            "chart": {
-                "stock": 20,
-                "bonds": 20,
-                "crypto": 20,
-                "nft": 20,
-                "defi": 10,
-                "real_estate": 10,
-            }
-        }
-        ```
+### Frontend
 
-- Portfolio Holdings Endpoint
-    - GET request
-    - Query Params
-        - `user_id`: `str`
-        - `asset_type`: `str` Default = `None`
-    - Response
-        - Return a list of the user's holdings in descending order by value, filter by asset type. Default asset type is `None`, so no filtering should happen.
-        - Example response:
-        ```
-         [
-            {
-                "ticker": "AAPL",
-                "name": "Apple",
-                "type": "stock",
-                "value": 1000,
-                "percentage": 8.3
-            },
-            ...
-         ]
-        ```
+- Created with **Create React App**.
+- Uses **Tailwind CSS** for styling and **Recharts** for charting.
+- Main features:
+  1. **Search bar** for `User ID`.
+  2. **Portfolio Chart** (pie chart).
+  3. **Portfolio Holdings** (table).
+  4. **Dropdown** to filter by asset type.
 
-Bonus points if you use Python 3 `typing` library to properly type your variables :)
+### Key Change
 
-## Frontend
-This part of the take-home assignment is OPTIONAL. If you have experience doing frontend development and would like
-to showcase your frontend skills, you can complete this part for extra credit.
+In `database.py`, the **asset types** for bond items were labeled as `"bonds"` instead of `"bond"`. Originally, `ASSET_TYPES` contained `"bond"` but the data used `"bonds"`.
 
-Task: You have been provided a basic "Create React App" project in the `/frontend` folder. Please create the UI for the portfolio tracker, pulling data from the endpoints you created in the backend assignment.
 
-Notes:
-- You can add any dependencies you want to the React project but please remember to update `package.json` so that I can run the project to test.
+## 2. How to Run
 
-![Frontend Assignment](images/frontend_assignment.png)
+### 2.1 Backend
 
-UI elements:
-- Title - "AssetDash Portfolio Tracker"
-- Search bar for User ID
-- Portfolio Chart
-    - Pie chart showing the breakdown of assets by type
-- Portfolio Holdings
-    - Holdings table/listview showing the list of assets by type
+#### Python Version
 
-UX:
-- Screen initially will appear empty since there is no User ID in the search bar
-- If you search by User ID in the search bar it should fetch from the endpoints you created in the backend part
-- Display the chart using any graphing library you like
-- Display the list of holdings as either a table or a listview
-- The "Asset Type" dropdown should default to "All" which means no filter. The options in the dropdown should be the values in `ASSET_TYPES` from the backend `database.py`
-- When a user change the dropdown it should query the holdings endpoint and filter by `asset type`
+Ensure you are using Python 3.10 or 3.11 (the project is tested under Python 3.10).
 
-Bonus points for making the app look pretty with a nice graphing library and CSS styles :)
+#### Install Dependencies
+
+
+```bash
+cd backend
+
+pip install -r requirements.txt
+```
+
+Run the Server
+
+```bash
+python server.py
+```
+
+The server starts at http://0.0.0.0:5000 by default.
+
+2.2 Frontend
+Install Node Dependencies
+If your frontend is in a frontend folder:
+
+```bash
+cd frontend
+npm install
+```
+
+Start the React App
+
+```bash
+npm start
+```
+
+The React app will be served at http://localhost:3000.
+
+Enter a user ID (e.g., user_1) in the search bar, then click Search.
+You should see a pie chart representing the portfolio’s asset-type breakdown and a table of holdings.
+Use the dropdown to filter holdings by asset type (e.g., “bonds”, “crypto”, etc.).
+
+# Screenshot:
+
+![Frontend Assignment](images/screenshot.png)
