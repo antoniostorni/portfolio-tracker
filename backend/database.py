@@ -1,7 +1,7 @@
 
 ASSET_TYPES = {
     "stock",
-    "bond",
+    "bonds",
     "crypto",
     "nft",
     "defi",
