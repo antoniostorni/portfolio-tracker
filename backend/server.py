@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 import uvicorn
 from decimal import Decimal
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import the data from database.py
 from database import ASSET_TYPES, HOLDINGS, ASSETS
@@ -10,6 +11,15 @@ from database import ASSET_TYPES, HOLDINGS, ASSETS
 app = FastAPI(title="Portfolio API",
              description="API for managing user portfolio data",
              version="1.0.0")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # -----------------------------
